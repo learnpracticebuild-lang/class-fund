@@ -140,8 +140,9 @@ body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Hiragino 
 
   <!-- 收入 -->
   <div class="section anim">
-    <div class="sh"><div class="sh-icon">💰</div><div class="sh-text">收入明细</div><div class="sh-count">2 笔</div></div>
+    <div class="sh"><div class="sh-icon">💰</div><div class="sh-text">收入明细</div><div class="sh-count">3 笔</div></div>
     <div class="ledger">
+
       <div class="lr neu" onclick="tog(this)">
         <div class="row-icon">🏦</div>
         <div class="rb"><div class="rn">上期结余转入</div><div class="rm">2025-12-01 · 陈剑华</div></div>
@@ -161,6 +162,17 @@ body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Hiragino 
         <div class="ditem"><span class="dn">2026年度班费 · 实收 51 人</span><span class="dv">¥255,000.00</span></div>
         <div class="dnote">附件编号：—&ensp;经手人：陈剑华</div>
       </div></div>
+
+      <div class="lr inc" onclick="tog(this)">
+        <div class="row-icon">🎗️</div>
+        <div class="rb"><div class="rn">王皎赞助班费</div><div class="rm">2026-01-21 · 王皎</div></div>
+        <div class="ra inc">+¥16,800</div><div class="chv">▼</div>
+      </div>
+      <div class="drawer"><div class="di">
+        <div class="ditem"><span class="dn">王皎同学额外赞助班费</span><span class="dv">¥16,800.00</span></div>
+        <div class="dnote">附件编号：—&ensp;经手人：王皎</div>
+      </div></div>
+
     </div>
   </div>
 
@@ -257,7 +269,7 @@ body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Hiragino 
 
 </div>
 <script>
-var INC=439702.39,EXP=211828.67,BAL=227873.72,CLS=255000;
+var INC=456502.39,EXP=211828.67,BAL=244673.72,CLS=255000;
 function drawRing(p){
   var cv=document.getElementById('rc'),ctx=cv.getContext('2d'),cx=100,cy=100,r=82,lw=12;
   ctx.clearRect(0,0,200,200);
