@@ -2,259 +2,407 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="format-detection" content="telephone=no">
-<title>170班班费收支情况报告 · 2026 Q1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no,email=no,address=no">
+<meta name="theme-color" content="#070d1a">
+<title>170班班费收支情况报告</title>
 <style>
 :root {
   --bg:#070d1a;--bg2:#0d1829;--bg3:#111f35;
   --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5e0a8;
   --silver:#8fa8c8;--text:#dce8f5;--muted:#5a7a99;
   --inc:#2ecc8a;--exp:#e8834a;--divider:rgba(201,168,76,0.18);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
-.wrap{max-width:480px;margin:0 auto;padding-bottom:48px;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Heiti SC","WenQuanYi Micro Hei",-apple-system,sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;width:100%;
+  padding-top:var(--safe-top);
+  padding-bottom:var(--safe-bottom);
+  padding-left:var(--safe-left);
+  padding-right:var(--safe-right);
+}
+.wrap{max-width:480px;width:100%;margin:0 auto;padding-bottom:32px;overflow-x:hidden;}
+img,canvas,svg{max-width:100%;height:auto;}
 
-/* HERO */
-.hero{position:relative;padding:52px 28px 36px;text-align:center;overflow:hidden;}
+.hero{position:relative;padding:clamp(32px,8vw,44px) 20px clamp(16px,4vw,20px);text-align:center;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%);pointer-events:none;}
-.badge{display:inline-block;padding:4px 14px;border:1px solid var(--gold);border-radius:20px;font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:18px;opacity:0;animation:fu .6s .1s forwards;}
-.hero-title{font-size:clamp(20px,5.5vw,26px);font-weight:700;color:var(--gold2);line-height:1.3;opacity:0;animation:fu .6s .2s forwards;}
-.hero-title span{display:block;font-size:.62em;font-weight:400;color:var(--silver);margin-top:5px;letter-spacing:1px;}
-.hero-period{margin-top:10px;font-size:12px;color:var(--muted);letter-spacing:1px;opacity:0;animation:fu .6s .3s forwards;}
+.badge{display:inline-block;padding:4px 13px;border:1px solid var(--gold);border-radius:20px;font-size:clamp(10px,2.6vw,11px);letter-spacing:1.5px;color:var(--gold);margin-bottom:14px;}
+.hero-title{font-size:clamp(19px,5.8vw,26px);font-weight:700;color:var(--gold2);line-height:1.35;padding:0 8px;}
+.hero-title span{display:block;font-size:.6em;font-weight:400;color:var(--silver);margin-top:6px;letter-spacing:.5px;}
 
-/* RING */
-.ring-wrap{position:relative;width:200px;height:200px;margin:32px auto 8px;opacity:0;animation:fu .7s .4s forwards;}
-.ring-wrap canvas{position:absolute;top:0;left:0;}
-.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.ring-label{font-size:11px;color:var(--muted);letter-spacing:1.5px;}
-.ring-number{font-size:clamp(22px,6vw,28px);font-weight:700;color:var(--gold2);line-height:1.2;margin-top:2px;}
-.ring-sub{font-size:11px;color:var(--silver);margin-top:4px;}
+/* PERIOD TABS */
+.annual-strip{display:flex;align-items:center;justify-content:space-around;
+  margin:0 16px 14px;padding:13px 4px;background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));
+  border:1px solid var(--divider);border-radius:14px;position:relative;z-index:1;}
+.as-item{flex:1;text-align:center;min-width:0;padding:0 2px;}
+.as-label{font-size:clamp(9px,2.4vw,10px);color:var(--muted);letter-spacing:.3px;margin-bottom:4px;white-space:nowrap;}
+.as-val{font-size:clamp(13px,3.6vw,15px);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.as-val.inc{color:var(--inc);}
+.as-val.exp{color:var(--exp);}
+.as-val.bal{color:var(--gold2);}
+.as-divider{width:1px;height:28px;background:var(--divider);flex-shrink:0;}
 
-/* STAT CARDS */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:24px;opacity:0;animation:fu .6s .6s forwards;}
-.sc{background:var(--bg2);border:1px solid var(--divider);border-radius:14px;padding:16px 14px;position:relative;overflow:hidden;}
+.compare-badge{display:inline-flex;align-items:center;gap:3px;font-size:clamp(9px,2.4vw,10px);
+  padding:2px 8px;border-radius:10px;margin-top:4px;font-weight:600;white-space:nowrap;}
+.sc-meta{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.compare-badge.down{background:rgba(46,204,138,0.12);color:var(--inc);}
+.compare-badge.up{background:rgba(232,131,74,0.12);color:var(--exp);}
+
+.tabs{display:flex;gap:8px;padding:0 16px;position:relative;z-index:1;}
+.tab{flex:1;text-align:center;padding:12px 4px;min-height:44px;display:flex;align-items:center;justify-content:center;
+  border-radius:11px;font-size:clamp(12px,3.2vw,13px);font-weight:600;
+  border:1px solid var(--divider);color:var(--muted);cursor:pointer;transition:all .25s;background:var(--bg2);
+  -webkit-user-select:none;user-select:none;}
+.tab.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d1829;border-color:var(--gold);}
+.tab:active{transform:scale(0.97);}
+
+.period{display:none;opacity:0;transition:opacity .35s ease;}
+.period.active{display:block;}
+.period.fade-in{opacity:1;}
+
+.ring-wrap{position:relative;width:clamp(160px,42vw,190px);height:clamp(160px,42vw,190px);margin:20px auto 8px;}
+.ring-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;}
+.ring-label{font-size:clamp(10px,2.6vw,11px);color:var(--muted);letter-spacing:1px;}
+.ring-number{font-size:clamp(20px,5.5vw,27px);font-weight:700;color:var(--gold2);line-height:1.2;margin-top:2px;word-break:break-all;}
+.ring-sub{font-size:clamp(10px,2.6vw,11px);color:var(--silver);margin-top:4px;}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:22px;}
+.sc{background:var(--bg2);border:1px solid var(--divider);border-radius:14px;padding:14px 13px;position:relative;overflow:hidden;min-width:0;}
 .sc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 .sc.inc::after{background:linear-gradient(90deg,transparent,var(--inc),transparent);}
 .sc.exp::after{background:linear-gradient(90deg,transparent,var(--exp),transparent);}
-.sc-label{font-size:11px;color:var(--muted);letter-spacing:.5px;margin-bottom:8px;}
-.sc-val{font-size:20px;font-weight:700;line-height:1;}
+.sc-label{font-size:clamp(10px,2.8vw,11px);color:var(--muted);letter-spacing:.3px;margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sc-val{font-size:clamp(16px,4.4vw,19px);font-weight:700;line-height:1.2;word-break:break-word;}
 .sc-val.inc{color:var(--inc);}
 .sc-val.exp{color:var(--exp);}
 .sc-val.bal{color:var(--gold2);}
 .sc-meta{font-size:10px;color:var(--muted);margin-top:6px;}
 
-/* SECTION */
-.section{padding:0 20px;margin-bottom:20px;}
+.section{padding:0 16px;margin-bottom:18px;}
 .sh{display:flex;align-items:center;gap:10px;padding-bottom:12px;margin-bottom:4px;border-bottom:1px solid var(--divider);}
 .sh-icon{width:28px;height:28px;border-radius:8px;background:rgba(201,168,76,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.sh-text{font-size:13px;font-weight:600;color:var(--gold3);letter-spacing:.5px;}
-.sh-count{margin-left:auto;font-size:11px;color:var(--muted);background:var(--bg3);padding:2px 8px;border-radius:10px;}
+.sh-text{font-size:clamp(12px,3.2vw,13px);font-weight:600;color:var(--gold3);letter-spacing:.3px;}
+.sh-count{margin-left:auto;font-size:clamp(10px,2.8vw,11px);color:var(--muted);background:var(--bg3);padding:2px 8px;border-radius:10px;white-space:nowrap;}
 
-/* LEDGER */
 .ledger{display:flex;flex-direction:column;gap:2px;}
-.lr{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--bg2);border:1px solid transparent;cursor:pointer;position:relative;overflow:hidden;}
+.lr{display:flex;align-items:center;gap:10px;padding:13px 12px;min-height:44px;border-radius:12px;background:var(--bg2);border:1px solid transparent;cursor:pointer;position:relative;overflow:hidden;-webkit-user-select:none;user-select:none;}
 .lr:active,.lr.open{border-color:var(--divider);background:var(--bg3);}
 .lr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
 .lr.inc::before{background:var(--inc);}
 .lr.exp::before{background:var(--exp);}
 .lr.neu::before{background:var(--gold);}
-.row-icon{font-size:18px;width:32px;text-align:center;flex-shrink:0;}
+.row-icon{font-size:17px;width:28px;text-align:center;flex-shrink:0;}
 .rb{flex:1;min-width:0;}
-.rn{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.rm{font-size:11px;color:var(--muted);margin-top:2px;}
-.ra{font-size:15px;font-weight:700;flex-shrink:0;}
+.rn{font-size:clamp(12px,3.2vw,13px);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rm{font-size:clamp(10px,2.8vw,11px);color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ra{font-size:clamp(13px,3.6vw,15px);font-weight:700;flex-shrink:0;white-space:nowrap;}
 .ra.inc{color:var(--inc);}
 .ra.exp{color:var(--exp);}
 .ra.neu{color:var(--gold);}
 .chv{font-size:10px;color:var(--muted);margin-left:4px;transition:transform .3s;flex-shrink:0;}
 .lr.open .chv{transform:rotate(180deg);}
 
-/* DRAWER */
 .drawer{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);margin:0 0 2px;}
-.drawer.open{max-height:500px;}
-.di{background:var(--bg3);border:1px solid var(--divider);border-radius:0 0 12px 12px;padding:14px 14px 14px 20px;border-top:none;}
-.ditem{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px;gap:12px;}
+.drawer.open{max-height:700px;}
+.di{background:var(--bg3);border:1px solid var(--divider);border-radius:0 0 12px 12px;padding:13px 12px 13px 18px;border-top:none;}
+.ditem{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:clamp(11px,3vw,12px);gap:10px;}
 .ditem:last-of-type{border-bottom:none;}
-.dn{color:var(--silver);flex:1;line-height:1.4;}
-.dv{color:var(--text);font-size:13px;white-space:nowrap;}
-.dnote{font-size:11px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04);line-height:1.6;}
+.dn{color:var(--silver);flex:1;line-height:1.5;word-break:break-word;}
+.dv{color:var(--text);font-size:clamp(12px,3.2vw,13px);white-space:nowrap;flex-shrink:0;}
+.dnote{font-size:clamp(10px,2.8vw,11px);color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.04);line-height:1.65;word-break:break-word;}
 
-/* BAR CHART */
 .bar-wrap{padding:4px 0;}
-.br{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.bl{font-size:11px;color:var(--silver);width:72px;flex-shrink:0;text-align:right;line-height:1.3;}
-.bt{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;}
-.bf{height:100%;border-radius:4px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
-.bp{font-size:11px;color:var(--gold);width:40px;flex-shrink:0;text-align:right;}
+.br{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.bl{font-size:clamp(10px,2.8vw,11px);color:var(--silver);width:clamp(62px,18vw,78px);flex-shrink:0;text-align:right;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bt{flex:1;height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;min-width:20px;}
+.bf{height:100%;border-radius:4px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.bp{font-size:clamp(10px,2.8vw,11px);color:var(--gold);width:38px;flex-shrink:0;text-align:right;white-space:nowrap;}
 
-/* FOOTER */
-.footer{text-align:center;padding:28px 20px 0;border-top:1px solid var(--divider);margin:28px 20px 0;opacity:0;animation:fu .6s 1.2s forwards;}
-.ft-logo{font-size:13px;color:var(--gold);letter-spacing:2px;font-weight:600;}
-.ft-meta{font-size:11px;color:var(--muted);margin-top:8px;line-height:2.0;}
+.note-box{margin:0 16px 20px;padding:14px 14px;background:var(--bg2);border:1px solid var(--divider);border-radius:12px;}
+.nt-title{font-size:clamp(11px,3vw,12px);color:var(--gold3);font-weight:600;margin-bottom:10px;letter-spacing:.3px;}
+.checklist{display:flex;flex-direction:column;gap:9px;}
+.check-item{display:flex;align-items:flex-start;gap:8px;}
+.check-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:6px;}
+.check-text{font-size:clamp(10px,2.8vw,11px);color:var(--muted);line-height:1.75;word-break:break-word;}
 
-/* ANIMATIONS */
-@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.anim{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
-.anim.in{opacity:1;transform:translateY(0);}
+.footer{text-align:center;padding:22px 16px calc(16px + var(--safe-bottom));border-top:1px solid var(--divider);margin:8px 16px 0;}
+.ft-logo{font-size:clamp(12px,3.2vw,13px);color:var(--gold);letter-spacing:1.5px;font-weight:600;}
+.ft-meta{font-size:clamp(10px,2.8vw,11px);color:var(--muted);margin-top:8px;line-height:2.0;word-break:break-word;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="hero">
-    <div class="badge">2026 · Q1 · 班费公示</div>
+    <div class="badge">2026 · 班费公示</div>
     <div class="hero-title">
       北大光华EMBA 170班
       <span>班费收支情况报告</span>
     </div>
-    <div class="hero-period">统计期间：2025年12月 — 2026年3月</div>
+  </div>
+
+  <div class="annual-strip">
+    <div class="as-item">
+      <div class="as-label">年度累计收入</div>
+      <div class="as-val inc">¥456,502</div>
+    </div>
+    <div class="as-divider"></div>
+    <div class="as-item">
+      <div class="as-label">年度累计支出</div>
+      <div class="as-val exp">¥216,858</div>
+    </div>
+    <div class="as-divider"></div>
+    <div class="as-item">
+      <div class="as-label">当前余额</div>
+      <div class="as-val bal">¥239,644</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab" id="tabQ1" onclick="switchPeriod('Q1')">Q1（1-3月）</div>
+    <div class="tab active" id="tabQ2" onclick="switchPeriod('Q2')">Q2（4-6月）</div>
+  </div>
+
+  <!-- ══════════ Q1 ══════════ -->
+  <div class="period" id="periodQ1">
     <div class="ring-wrap">
-      <canvas id="rc" width="200" height="200"></canvas>
+      <canvas id="rcQ1" width="190" height="190"></canvas>
       <div class="ring-center">
-        <div class="ring-label">当前余额</div>
-        <div class="ring-number">¥<span id="bN">0</span></div>
+        <div class="ring-label">Q1期末余额</div>
+        <div class="ring-number">¥<span id="bNQ1">0</span></div>
         <div class="ring-sub">资金安全结余</div>
       </div>
     </div>
-  </div>
-
-  <div class="stats">
-    <div class="sc inc">
-      <div class="sc-label">📥 累计收入</div>
-      <div class="sc-val inc">¥<span id="iN">0</span></div>
-      <div class="sc-meta">含期初结余</div>
+    <div class="stats">
+      <div class="sc inc"><div class="sc-label">📥 累计收入</div><div class="sc-val inc">¥<span id="iNQ1">0</span></div><div class="sc-meta">含期初结余</div></div>
+      <div class="sc exp"><div class="sc-label">📤 累计支出</div><div class="sc-val exp">¥<span id="eNQ1">0</span></div><div class="sc-meta">共 5 笔记录</div></div>
+      <div class="sc" style="grid-column:1/-1"><div class="sc-label">🎓 2026年班费缴纳</div><div class="sc-val bal">¥255,000</div><div class="sc-meta">实收 51 人</div></div>
     </div>
-    <div class="sc exp">
-      <div class="sc-label">📤 累计支出</div>
-      <div class="sc-val exp">¥<span id="eN">0</span></div>
-      <div class="sc-meta">共 5 笔记录</div>
+
+    <div class="section">
+      <div class="sh"><div class="sh-icon">💰</div><div class="sh-text">收入明细</div><div class="sh-count">3 笔</div></div>
+      <div class="ledger">
+        <div class="lr neu" onclick="tog(this)">
+          <div class="row-icon">🏦</div><div class="rb"><div class="rn">上期结余转入</div><div class="rm">2025-12-01 · 陈剑华</div></div>
+          <div class="ra neu">¥184,702</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">上期班费结余，交接转入</span><span class="dv">¥184,702.39</span></div></div></div>
+
+        <div class="lr inc" onclick="tog(this)">
+          <div class="row-icon">🎓</div><div class="rb"><div class="rn">2026年班费收入</div><div class="rm">2026-01-15 · 陈剑华</div></div>
+          <div class="ra inc">+¥255,000</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">2026年度班费 · 实收 51 人</span><span class="dv">¥255,000.00</span></div></div></div>
+
+        <div class="lr inc" onclick="tog(this)">
+          <div class="row-icon">🎗️</div><div class="rb"><div class="rn">王皎赞助班费</div><div class="rm">2026-01-21 · 王皎</div></div>
+          <div class="ra inc">+¥16,800</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">王皎同学额外赞助班费</span><span class="dv">¥16,800.00</span></div></div></div>
+      </div>
     </div>
-    <div class="sc" style="grid-column:1/-1">
-      <div class="sc-label">🎓 2026年班费缴纳</div>
-      <div class="sc-val bal">¥<span id="cN">0</span></div>
-      <div class="sc-meta">实收 51 人</div>
+
+    <div class="section">
+      <div class="sh"><div class="sh-icon">📋</div><div class="sh-text">支出明细</div><div class="sh-count">5 笔</div></div>
+      <div class="ledger">
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🎂</div><div class="rb"><div class="rn">1-2月生日礼品</div><div class="rm">2026-01-13 · 罗敏慧</div></div>
+          <div class="ra exp">-¥2,454</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">相框（毕业照）× 8</span><span class="dv">¥506.67</span></div>
+          <div class="ditem"><span class="dn">立体贺卡 × 8</span><span class="dv">¥24.03</span></div>
+          <div class="ditem"><span class="dn">切子玻璃杯（礼盒）× 8</span><span class="dv">¥1,012.08</span></div>
+          <div class="ditem"><span class="dn">GODIVA 巧克力 × 8</span><span class="dv">¥736.14</span></div>
+          <div class="ditem"><span class="dn">快递费</span><span class="dv">¥175.00</span></div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🎂</div><div class="rb"><div class="rn">12月生日礼品</div><div class="rm">2026-01-15 · 王皎</div></div>
+          <div class="ra exp">-¥3,146</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">水晶杯 × 8</span><span class="dv">¥1,168.00</span></div>
+          <div class="ditem"><span class="dn">相框 × 8</span><span class="dv">¥466.80</span></div>
+          <div class="ditem"><span class="dn">GODIVA 巧克力 × 8</span><span class="dv">¥687.00</span></div>
+          <div class="ditem"><span class="dn">定制帆布袋 × 21 + 定制费</span><span class="dv">¥599.94</span></div>
+          <div class="ditem"><span class="dn">运费</span><span class="dv">¥224.00</span></div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🏛️</div><div class="rb"><div class="rn">华南校友会年会经费</div><div class="rm">2026-01-16 · 陈剑华</div></div>
+          <div class="ra exp">-¥200,000</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">银行转账 陈剑华 → 宣利（招商银行）</span><span class="dv">¥200,000.00</span></div></div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🎁</div><div class="rb"><div class="rn">3月生日礼品</div><div class="rm">2026-03-18 · 王丽英</div></div>
+          <div class="ra exp">-¥4,837</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">立体贺卡 × 34</span><span class="dv">¥765.00</span></div>
+          <div class="ditem"><span class="dn">Aurora 切子杯（礼盒）× 10</span><span class="dv">¥1,560.10</span></div>
+          <div class="ditem"><span class="dn">GODIVA 巧克力 × 10</span><span class="dv">¥890.00</span></div>
+          <div class="ditem"><span class="dn">定制帆布袋 × 32</span><span class="dv">¥966.00</span></div>
+          <div class="ditem"><span class="dn">定制相框 × 10</span><span class="dv">¥656.00</span></div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">💐</div><div class="rb"><div class="rn">彦明同学婚礼用花</div><div class="rm">2026-03-27 · 王皎</div></div>
+          <div class="ra exp">-¥1,392</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">999红玫瑰花束 · 柒月全国实体鲜花店</span><span class="dv">¥1,391.91</span></div></div></div>
+      </div>
     </div>
-  </div>
 
-  <!-- 收入 -->
-  <div class="section anim">
-    <div class="sh"><div class="sh-icon">💰</div><div class="sh-text">收入明细</div><div class="sh-count">3 笔</div></div>
-    <div class="ledger">
-
-      <div class="lr neu" onclick="tog(this)">
-        <div class="row-icon">🏦</div>
-        <div class="rb"><div class="rn">上期结余转入</div><div class="rm">2025-12-01 · 陈剑华</div></div>
-        <div class="ra neu">¥184,702</div><div class="chv">▼</div>
+    <div class="section">
+      <div class="sh"><div class="sh-icon">📊</div><div class="sh-text">支出项目占比</div></div>
+      <div class="bar-wrap" id="bwQ1">
+        <div class="br"><div class="bl">华南年会</div><div class="bt"><div class="bf" id="q1b1" style="background:linear-gradient(90deg,#c9a84c,#f5e0a8)"></div></div><div class="bp">94.5%</div></div>
+        <div class="br"><div class="bl">3月礼品</div><div class="bt"><div class="bf" id="q1b2" style="background:linear-gradient(90deg,#4a90d9,#7bb8f0)"></div></div><div class="bp">2.3%</div></div>
+        <div class="br"><div class="bl">12月礼品</div><div class="bt"><div class="bf" id="q1b3" style="background:linear-gradient(90deg,#2ecc8a,#56e0a8)"></div></div><div class="bp">1.5%</div></div>
+        <div class="br"><div class="bl">1-2月礼品</div><div class="bt"><div class="bf" id="q1b4" style="background:linear-gradient(90deg,#e8834a,#f0a87a)"></div></div><div class="bp">1.2%</div></div>
+        <div class="br"><div class="bl">婚礼用花</div><div class="bt"><div class="bf" id="q1b5" style="background:linear-gradient(90deg,#c0392b,#e05a4f)"></div></div><div class="bp">0.7%</div></div>
       </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">上期班费结余，交接转入</span><span class="dv">¥184,702.39</span></div>
-        <div class="dnote">附件编号：—&ensp;经手人：陈剑华</div>
-      </div></div>
-
-      <div class="lr inc" onclick="tog(this)">
-        <div class="row-icon">🎓</div>
-        <div class="rb"><div class="rn">2026年班费收入</div><div class="rm">2026-01-15 · 陈剑华</div></div>
-        <div class="ra inc">+¥255,000</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">2026年度班费 · 实收 51 人</span><span class="dv">¥255,000.00</span></div>
-        <div class="dnote">附件编号：—&ensp;经手人：陈剑华</div>
-      </div></div>
-
-      <div class="lr inc" onclick="tog(this)">
-        <div class="row-icon">🎗️</div>
-        <div class="rb"><div class="rn">王皎赞助班费</div><div class="rm">2026-01-21 · 王皎</div></div>
-        <div class="ra inc">+¥16,800</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">王皎同学额外赞助班费</span><span class="dv">¥16,800.00</span></div>
-        <div class="dnote">附件编号：—&ensp;经手人：王皎</div>
-      </div></div>
-
-    </div>
-  </div>
-
-  <!-- 支出 -->
-  <div class="section anim">
-    <div class="sh"><div class="sh-icon">📋</div><div class="sh-text">支出明细</div><div class="sh-count">5 笔</div></div>
-    <div class="ledger">
-
-      <div class="lr exp" onclick="tog(this)">
-        <div class="row-icon">🎂</div>
-        <div class="rb"><div class="rn">1-2月生日礼品</div><div class="rm">2026-01-13 · 罗敏慧</div></div>
-        <div class="ra exp">-¥2,454</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">相框（毕业照）× 8</span><span class="dv">¥506.67</span></div>
-        <div class="ditem"><span class="dn">立体贺卡 × 8</span><span class="dv">¥24.03</span></div>
-        <div class="ditem"><span class="dn">切子玻璃杯（礼盒）× 8</span><span class="dv">¥1,012.08</span></div>
-        <div class="ditem"><span class="dn">GODIVA 巧克力 × 8</span><span class="dv">¥736.14</span></div>
-        <div class="ditem"><span class="dn">快递费</span><span class="dv">¥175.00</span></div>
-        <div class="dnote">附件编号：支-2026001&ensp;详细凭证见附表</div>
-      </div></div>
-
-      <div class="lr exp" onclick="tog(this)">
-        <div class="row-icon">🎂</div>
-        <div class="rb"><div class="rn">12月生日礼品</div><div class="rm">2026-01-15 · 王皎</div></div>
-        <div class="ra exp">-¥3,146</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">水晶杯 × 8</span><span class="dv">¥1,168.00</span></div>
-        <div class="ditem"><span class="dn">相框 × 8</span><span class="dv">¥466.80</span></div>
-        <div class="ditem"><span class="dn">GODIVA 巧克力 × 8</span><span class="dv">¥687.00</span></div>
-        <div class="ditem"><span class="dn">定制帆布袋 × 21 + 定制费</span><span class="dv">¥599.94</span></div>
-        <div class="ditem"><span class="dn">运费</span><span class="dv">¥224.00</span></div>
-        <div class="dnote">附件编号：支-2026002&ensp;详细凭证见附表</div>
-      </div></div>
-
-      <div class="lr exp" onclick="tog(this)">
-        <div class="row-icon">🏛️</div>
-        <div class="rb"><div class="rn">华南校友会年会经费</div><div class="rm">2026-01-16 · 陈剑华</div></div>
-        <div class="ra exp">-¥200,000</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">银行转账 陈剑华 → 宣利（招商银行）</span><span class="dv">¥200,000.00</span></div>
-        <div class="dnote">附件编号：支-2026003<br>2025年华南校友会年会经费</div>
-      </div></div>
-
-      <div class="lr exp" onclick="tog(this)">
-        <div class="row-icon">🎁</div>
-        <div class="rb"><div class="rn">3月生日礼品</div><div class="rm">2026-03-18 · 王丽英</div></div>
-        <div class="ra exp">-¥4,837</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">立体贺卡 × 34</span><span class="dv">¥765.00</span></div>
-        <div class="ditem"><span class="dn">Aurora 切子杯（礼盒）× 10</span><span class="dv">¥1,560.10</span></div>
-        <div class="ditem"><span class="dn">GODIVA 巧克力 × 10</span><span class="dv">¥890.00</span></div>
-        <div class="ditem"><span class="dn">定制帆布袋 × 32</span><span class="dv">¥966.00</span></div>
-        <div class="ditem"><span class="dn">定制相框 × 10</span><span class="dv">¥656.00</span></div>
-        <div class="dnote">附件编号：支-2026004&ensp;收货人：王丽英</div>
-      </div></div>
-
-      <div class="lr exp" onclick="tog(this)">
-        <div class="row-icon">💐</div>
-        <div class="rb"><div class="rn">彦明同学婚礼用花</div><div class="rm">2026-03-27 · 王皎</div></div>
-        <div class="ra exp">-¥1,392</div><div class="chv">▼</div>
-      </div>
-      <div class="drawer"><div class="di">
-        <div class="ditem"><span class="dn">999红玫瑰花束 · 柒月全国实体鲜花店</span><span class="dv">¥1,391.91</span></div>
-        <div class="dnote">附件编号：支-2026005<br>送货：东部华侨城天麓七区</div>
-      </div></div>
-
     </div>
   </div>
 
-  <!-- 支出构成 -->
-  <div class="section anim">
-    <div class="sh"><div class="sh-icon">📊</div><div class="sh-text">支出项目占比</div></div>
-    <div class="bar-wrap" id="bw">
-      <div class="br"><div class="bl">华南年会</div><div class="bt"><div class="bf" id="b1" style="background:linear-gradient(90deg,#c9a84c,#f5e0a8)"></div></div><div class="bp">94.5%</div></div>
-      <div class="br"><div class="bl">3月礼品</div><div class="bt"><div class="bf" id="b2" style="background:linear-gradient(90deg,#4a90d9,#7bb8f0)"></div></div><div class="bp">2.3%</div></div>
-      <div class="br"><div class="bl">12月礼品</div><div class="bt"><div class="bf" id="b3" style="background:linear-gradient(90deg,#2ecc8a,#56e0a8)"></div></div><div class="bp">1.5%</div></div>
-      <div class="br"><div class="bl">1-2月礼品</div><div class="bt"><div class="bf" id="b4" style="background:linear-gradient(90deg,#e8834a,#f0a87a)"></div></div><div class="bp">1.1%</div></div>
-      <div class="br"><div class="bl">婚礼用花</div><div class="bt"><div class="bf" id="b5" style="background:linear-gradient(90deg,#c0392b,#e05a4f)"></div></div><div class="bp">0.7%</div></div>
+  <!-- ══════════ Q2 ══════════ -->
+  <div class="period active" id="periodQ2">
+    <div class="ring-wrap">
+      <canvas id="rcQ2" width="190" height="190"></canvas>
+      <div class="ring-center">
+        <div class="ring-label">当前余额</div>
+        <div class="ring-number">¥<span id="bNQ2">0</span></div>
+        <div class="ring-sub">资金安全结余</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="sc inc"><div class="sc-label">📥 期初结余</div><div class="sc-val inc">¥<span id="iNQ2">0</span></div><div class="sc-meta">承接Q1期末</div></div>
+      <div class="sc exp"><div class="sc-label">📤 Q2支出</div><div class="sc-val exp">¥<span id="eNQ2">0</span></div><div class="sc-meta">共 9 笔记录 <span class="compare-badge down">↓ 环比降97.6%</span></div></div>
+      <div class="sc" style="grid-column:1/-1"><div class="sc-label">🎓 Q2班费收入</div><div class="sc-val bal">¥0</div><div class="sc-meta">本季度无新增收款</div></div>
+    </div>
+
+    <div class="section">
+      <div class="sh"><div class="sh-icon">📋</div><div class="sh-text">支出明细</div><div class="sh-count">9 笔</div></div>
+      <div class="ledger">
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🚚</div><div class="rb"><div class="rn">3月快递费（4笔）</div><div class="rm">2026-03-23 · 王丽英</div></div>
+          <div class="ra exp">-¥91</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">李俊（惠州）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">彭尖利（佛山）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">陈天培（广州）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">张钥（深圳）</span><span class="dv">¥22.00</span></div>
+          <div class="dnote">⚠ 严格按季度归属应属于Q1，暂计入Q2统计</div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🚚</div><div class="rb"><div class="rn">4月快递费（4笔）</div><div class="rm">2026-04-04 · 王丽英</div></div>
+          <div class="ra exp">-¥77.2</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">杜毅（深圳）</span><span class="dv">¥19.60</span></div>
+          <div class="ditem"><span class="dn">韦泽辉（深圳）</span><span class="dv">¥19.60</span></div>
+          <div class="ditem"><span class="dn">孙本亮（深圳）</span><span class="dv">¥18.00</span></div>
+          <div class="ditem"><span class="dn">张文涛（深圳）</span><span class="dv">¥20.00</span></div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🚚</div><div class="rb"><div class="rn">4月快递费（李苑）</div><div class="rm">2026-04-05 · 王丽英</div></div>
+          <div class="ra exp">-¥32</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">李苑（昆明）</span><span class="dv">¥32.00</span></div></div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🎁</div><div class="rb"><div class="rn">5月生日礼品采购</div><div class="rm">2026-05-03 · 王丽英</div></div>
+          <div class="ra exp">-¥3,134</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">相框摆台照片定制 × 10</span><span class="dv">¥684.00</span></div>
+          <div class="ditem"><span class="dn">GODIVA×泡泡玛特巧克力 × 10</span><span class="dv">¥890.00</span></div>
+          <div class="ditem"><span class="dn">Aurora切子杯（皮质礼盒）× 10</span><span class="dv">¥1,560.10</span></div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🚚</div><div class="rb"><div class="rn">5月快递费（5笔）</div><div class="rm">2026-05-11 · 王丽英</div></div>
+          <div class="ra exp">-¥115</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">岑辉（珠海）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">刘德刚（佛山）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">陈琳（中山）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">邓涵（东莞）</span><span class="dv">¥23.00</span></div>
+          <div class="ditem"><span class="dn">毕然（广州）</span><span class="dv">¥23.00</span></div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🚚</div><div class="rb"><div class="rn">5月快递费（潘婷）</div><div class="rm">2026-05-12 · 王丽英</div></div>
+          <div class="ra exp">-¥38</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di"><div class="ditem"><span class="dn">潘婷（成都，罗姐收）</span><span class="dv">¥38.00</span></div></div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">📦</div><div class="rb"><div class="rn">待发货订单</div><div class="rm">截图时点 2026-06-30</div></div>
+          <div class="ra exp">-¥1,306</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">Aurora切子杯（蓝雏菊礼盒）× 4</span><span class="dv">¥624.04</span></div>
+          <div class="ditem"><span class="dn">相框摆台照片定制 × 10</span><span class="dv">¥682.00</span></div>
+          <div class="dnote">⚠ 截图时状态为待发货，后续以实际签收为准</div>
+        </div></div>
+
+        <div class="lr exp" onclick="tog(this)">
+          <div class="row-icon">🍪</div><div class="rb"><div class="rn">手工饼干铁盒装</div><div class="rm">日期待补充 · 王丽英</div></div>
+          <div class="ra exp">-¥236</div><div class="chv">▼</div>
+        </div>
+        <div class="drawer"><div class="di">
+          <div class="ditem"><span class="dn">香草开心果口味 × 4</span><span class="dv">¥236.00</span></div>
+          <div class="dnote">已付款未发货，具体用途及月份待确认</div>
+        </div></div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sh"><div class="sh-icon">📊</div><div class="sh-text">支出项目占比</div></div>
+      <div class="bar-wrap" id="bwQ2">
+        <div class="br"><div class="bl">5月礼品采购</div><div class="bt"><div class="bf" id="q2b1" style="background:linear-gradient(90deg,#c9a84c,#f5e0a8)"></div></div><div class="bp">62.3%</div></div>
+        <div class="br"><div class="bl">待发货订单</div><div class="bt"><div class="bf" id="q2b2" style="background:linear-gradient(90deg,#4a90d9,#7bb8f0)"></div></div><div class="bp">26.0%</div></div>
+        <div class="br"><div class="bl">手工饼干</div><div class="bt"><div class="bf" id="q2b3" style="background:linear-gradient(90deg,#7a3a7a,#a06aa0)"></div></div><div class="bp">4.7%</div></div>
+        <div class="br"><div class="bl">5月快递费</div><div class="bt"><div class="bf" id="q2b4" style="background:linear-gradient(90deg,#2ecc8a,#56e0a8)"></div></div><div class="bp">3.0%</div></div>
+        <div class="br"><div class="bl">3月快递费</div><div class="bt"><div class="bf" id="q2b5" style="background:linear-gradient(90deg,#e8834a,#f0a87a)"></div></div><div class="bp">1.8%</div></div>
+        <div class="br"><div class="bl">4月快递费</div><div class="bt"><div class="bf" id="q2b6" style="background:linear-gradient(90deg,#c0392b,#e05a4f)"></div></div><div class="bp">2.2%</div></div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <div class="nt-title">📌 待确认事项</div>
+      <div class="checklist">
+        <div class="check-item">
+          <span class="check-dot"></span>
+          <span class="check-text">3月23日的4笔快递费（¥91）严格按季度归属应属于Q1，暂计入本季度统计</span>
+        </div>
+        <div class="check-item">
+          <span class="check-dot"></span>
+          <span class="check-text">待发货订单（¥1,306.04）为截图时点状态，后续以实际签收金额为准</span>
+        </div>
+        <div class="check-item">
+          <span class="check-dot"></span>
+          <span class="check-text">手工饼干订单（¥236）具体日期待补充确认</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -262,27 +410,34 @@ body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Hiragino 
     <div class="ft-logo">北大光华EMBA · 170班班委</div>
     <div class="ft-meta">
       制表人：陈岚清 &nbsp;｜&nbsp; 财务经手人：陈剑华<br>
-      公示日期：2026年3月31日<br>
+      Q2数据截至：2026年7月8日<br>
       <span style="font-size:10px;color:#3a5a7a">本报告经班委审核，如有疑问欢迎联系班委</span>
     </div>
   </div>
 
 </div>
 <script>
-var INC=456502.39,EXP=211828.67,BAL=244673.72,CLS=255000;
-function drawRing(p){
-  var cv=document.getElementById('rc'),ctx=cv.getContext('2d'),cx=100,cy=100,r=82,lw=12;
-  ctx.clearRect(0,0,200,200);
+// Q1 data
+var Q1_INC=456502.39, Q1_EXP=211828.67, Q1_BAL=244673.72;
+// Q2 data
+var Q2_INC=244673.72, Q2_EXP=5029.34, Q2_BAL=239644.38;
+
+function drawRing(canvasId, income, balance, expense) {
+  var cv=document.getElementById(canvasId);
+  if(!cv) return;
+  var ctx=cv.getContext('2d'), cx=95, cy=95, r=78, lw=12;
+  ctx.clearRect(0,0,190,190);
   ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=lw;ctx.stroke();
-  var bp=(BAL/INC)*p;
+  var bp=balance/income;
   ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*bp);
   var g1=ctx.createLinearGradient(cx-r,cy,cx+r,cy);g1.addColorStop(0,'#c9a84c');g1.addColorStop(1,'#f5e0a8');
   ctx.strokeStyle=g1;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
-  var ep=(EXP/INC)*p;
+  var ep=expense/income;
   ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI/2+Math.PI*2*bp,-Math.PI/2+Math.PI*2*(bp+ep));
   var g2=ctx.createLinearGradient(cx-r,cy,cx+r,cy);g2.addColorStop(0,'#e8834a');g2.addColorStop(1,'#f0b07a');
   ctx.strokeStyle=g2;ctx.lineWidth=lw;ctx.stroke();
 }
+
 function cnt(el,tgt,dur){
   var s=Date.now();
   (function t(){
@@ -291,46 +446,79 @@ function cnt(el,tgt,dur){
     if(p<1)requestAnimationFrame(t);
   })();
 }
-function animRing(){
+
+function animBars(wrapId){
+  var wrap=document.getElementById(wrapId);
+  if(!wrap || wrap.dataset.done) return;
+  wrap.dataset.done='1';
+  var fills=wrap.querySelectorAll('.bf');
+  var pcts={
+    q1b1:94.5,q1b2:2.3,q1b3:1.5,q1b4:1.2,q1b5:0.7,
+    q2b1:62.3,q2b2:26.0,q2b3:4.7,q2b4:3.0,q2b5:1.8,q2b6:2.2
+  };
+  fills.forEach(function(f){
+    var pct=pcts[f.id]||0;
+    setTimeout(function(){f.style.width=pct+'%';},150);
+  });
+}
+
+function tog(row){
+  var d=row.nextElementSibling,o=d.classList.contains('open');
+  var parent=row.closest('.period');
+  parent.querySelectorAll('.drawer').forEach(function(x){x.classList.remove('open');});
+  parent.querySelectorAll('.lr').forEach(function(x){x.classList.remove('open');});
+  if(!o){d.classList.add('open');row.classList.add('open');}
+}
+
+var animated={Q1:false,Q2:false};
+function initPeriod(period){
+  if(animated[period]) return;
+  animated[period]=true;
+  if(period==='Q1'){
+    drawRing('rcQ1',0,0,0);
+    setTimeout(function(){
+      animateRingProgressive('rcQ1',Q1_INC,Q1_BAL,Q1_EXP);
+      cnt(document.getElementById('bNQ1'),Q1_BAL,1200);
+      cnt(document.getElementById('iNQ1'),Q1_INC,1200);
+      cnt(document.getElementById('eNQ1'),Q1_EXP,1200);
+      animBars('bwQ1');
+    },200);
+  } else {
+    drawRing('rcQ2',0,0,0);
+    setTimeout(function(){
+      animateRingProgressive('rcQ2',Q2_INC,Q2_BAL,Q2_EXP);
+      cnt(document.getElementById('bNQ2'),Q2_BAL,1200);
+      cnt(document.getElementById('iNQ2'),Q2_INC,1200);
+      cnt(document.getElementById('eNQ2'),Q2_EXP,1200);
+      animBars('bwQ2');
+    },200);
+  }
+}
+
+function animateRingProgressive(canvasId,income,balance,expense){
   var s=Date.now();
   (function t(){
-    var p=Math.min((Date.now()-s)/1400,1),e=1-Math.pow(1-p,3);
-    drawRing(e);
+    var p=Math.min((Date.now()-s)/1200,1),e=1-Math.pow(1-p,3);
+    drawRing(canvasId,income,balance*e,expense*e);
     if(p<1)requestAnimationFrame(t);
   })();
 }
-var bDone=false;
-function animBars(){
-  if(bDone)return;bDone=true;
-  var ws=[94.5,2.3,1.5,1.1,0.7];
-  for(var i=1;i<=5;i++){
-    (function(idx,w){setTimeout(function(){document.getElementById('b'+idx).style.width=w+'%';},200);})(i,ws[i-1]);
-  }
+
+function switchPeriod(period){
+  document.getElementById('tabQ1').classList.toggle('active',period==='Q1');
+  document.getElementById('tabQ2').classList.toggle('active',period==='Q2');
+  var p1=document.getElementById('periodQ1'), p2=document.getElementById('periodQ2');
+  p1.classList.toggle('active',period==='Q1');
+  p2.classList.toggle('active',period==='Q2');
+  var active = period==='Q1' ? p1 : p2;
+  active.classList.remove('fade-in');
+  setTimeout(function(){ active.classList.add('fade-in'); }, 20);
+  initPeriod(period);
 }
-function tog(row){
-  var d=row.nextElementSibling,o=d.classList.contains('open');
-  document.querySelectorAll('.drawer').forEach(function(x){x.classList.remove('open');});
-  document.querySelectorAll('.lr').forEach(function(x){x.classList.remove('open');});
-  if(!o){d.classList.add('open');row.classList.add('open');}
-}
-function chk(){
-  var wh=window.innerHeight;
-  document.querySelectorAll('.anim:not(.in)').forEach(function(el){
-    if(el.getBoundingClientRect().top<wh-40)el.classList.add('in');
-  });
-  var bw=document.getElementById('bw');
-  if(bw&&bw.getBoundingClientRect().top<wh-40)animBars();
-}
-window.addEventListener('scroll',chk,{passive:true});
-drawRing(0);
-setTimeout(function(){
-  animRing();
-  cnt(document.getElementById('bN'),BAL,1400);
-  cnt(document.getElementById('iN'),INC,1400);
-  cnt(document.getElementById('eN'),EXP,1400);
-  cnt(document.getElementById('cN'),CLS,1200);
-  chk();
-},400);
+
+// init default Q2
+initPeriod('Q2');
+setTimeout(function(){ document.getElementById('periodQ2').classList.add('fade-in'); }, 20);
 </script>
 </body>
 </html>
